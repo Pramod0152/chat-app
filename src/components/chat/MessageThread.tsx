@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 
+import { ComposeBox } from '@/components/chat/ComposeBox';
 import { MessageBubble } from '@/components/chat/MessageBubble';
 import { SkeletonMessage } from '@/components/shared/SkeletonMessage';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -45,7 +46,7 @@ export function MessageThread() {
   const messages = data?.data ? [...data.data].reverse() : [];
 
   return (
-    <div className="flex h-full flex-1 flex-col">
+    <div className="flex h-full flex-1 flex-col overflow-hidden">
       <div className="flex flex-col gap-0.5 p-4">
         <span className="truncate font-semibold">{headerName}</span>
         <span className="text-muted-foreground text-xs">
@@ -55,7 +56,7 @@ export function MessageThread() {
 
       <Separator />
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="min-h-0 flex-1">
         <div className="flex flex-col gap-4 p-4">
           {isLoading ? (
             Array.from({ length: 5 }).map((_, index) => (
@@ -80,6 +81,8 @@ export function MessageThread() {
           <div ref={bottomRef} />
         </div>
       </ScrollArea>
+
+      <ComposeBox />
     </div>
   );
 }
