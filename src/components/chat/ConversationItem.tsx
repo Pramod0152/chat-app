@@ -7,12 +7,14 @@ interface ConversationItemProps {
   isActive: boolean;
   onClick: () => void;
   currentUserId: number;
+  unreadCount: number;
 }
 
 export function ConversationItem({
   conversation,
   isActive,
   onClick,
+  unreadCount,
 }: ConversationItemProps) {
   const displayName = getConversationDisplayName(conversation);
   const initial = displayName.charAt(0).toUpperCase() || '?';
@@ -20,6 +22,7 @@ export function ConversationItem({
     conversation.type === 'Group'
       ? `${conversation.participants?.length ?? 0} members`
       : 'Private';
+  const showBadge = unreadCount > 0 && !isActive;
 
   return (
     <button
@@ -38,7 +41,17 @@ export function ConversationItem({
         <span className="text-muted-foreground truncate text-xs">
           {secondaryText}
         </span>
+        {conversation.last_message?.content ? (
+          <span className="text-muted-foreground truncate text-sm">
+            {conversation.last_message.content}
+          </span>
+        ) : null}
       </div>
+      {showBadge ? (
+        <span className="bg-primary text-primary-foreground flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-medium">
+          {unreadCount > 99 ? '99+' : unreadCount}
+        </span>
+      ) : null}
     </button>
   );
 }

@@ -21,6 +21,7 @@ export interface Conversation {
   updated_at: string;
   admin?: User;
   participants?: Participant[];
+  last_message?: Pick<Message, 'id' | 'content' | 'user_id' | 'created_at'>;
 }
 
 export interface Message {

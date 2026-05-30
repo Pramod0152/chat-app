@@ -22,6 +22,7 @@ export function ConversationSidebar() {
   const setActiveConversationId = useChatStore(
     (state) => state.setActiveConversationId,
   );
+  const unreadCounts = useChatStore((state) => state.unreadCounts);
 
   const [filter, setFilter] = useState('');
   const { data, isLoading, isError } = useConversations();
@@ -105,6 +106,7 @@ export function ConversationSidebar() {
               isActive={conversation.id === activeConversationId}
               onClick={() => setActiveConversationId(conversation.id)}
               currentUserId={currentUserId}
+              unreadCount={unreadCounts[conversation.id] ?? 0}
             />
           ))
         )}
