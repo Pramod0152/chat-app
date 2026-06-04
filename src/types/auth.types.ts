@@ -11,6 +11,7 @@ export interface User {
 export interface LoginPayload {
   email: string;
   password: string;
+  fcm_token?: string;
 }
 
 export interface RegisterPayload {

@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { getSocket } from '@/api/socket';
-import { useAuthStore } from '@/store/auth.store';
-import { useChatStore } from '@/store/chat.store';
-import type { ApiListResponse, Message } from '@/types/chat.types';
+import { getSocket } from "@/api/socket";
+import { useAuthStore } from "@/store/auth.store";
+import { useChatStore } from "@/store/chat.store";
+import type { ApiListResponse, Message } from "@/types/chat.types";
 
 interface UseSendMessageResult {
   content: string;
@@ -18,10 +18,10 @@ export function useSendMessage(): UseSendMessageResult {
   const queryClient = useQueryClient();
   const currentUser = useAuthStore((state) => state.user);
   const activeConversationId = useChatStore(
-    (state) => state.activeConversationId,
+    (state) => state.activeConversationId
   );
 
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string>("");
   const [isSending, setIsSending] = useState<boolean>(false);
 
   const canSend =
@@ -36,15 +36,15 @@ export function useSendMessage(): UseSendMessageResult {
 
     const socket = getSocket();
     if (!socket) {
-      console.warn('Socket not connected');
+      console.warn("Socket not connected");
       return;
     }
 
     setIsSending(true);
-    socket.emit('send-message', {
+    socket.emit("send-message", {
       conversation_id: activeConversationId,
       content: trimmed,
-      type: 'Text',
+      type: "Text",
     });
 
     if (currentUser) {
@@ -55,24 +55,24 @@ export function useSendMessage(): UseSendMessageResult {
         user_id: currentUser.id,
         content: trimmed,
         is_updated: false,
-        type: 'Text',
+        type: "Text",
         created_at: now,
         updated_at: now,
         user: currentUser,
       };
 
       queryClient.setQueryData<ApiListResponse<Message>>(
-        ['messages', activeConversationId],
+        ["messages", activeConversationId],
         (old) => {
           if (!old) {
-            return { message: '', data: [ownMessage] };
+            return { message: "", data: [ownMessage] };
           }
           return { ...old, data: [ownMessage, ...old.data] };
-        },
+        }
       );
     }
 
-    setContent('');
+    setContent("");
     setIsSending(false);
   };
 
