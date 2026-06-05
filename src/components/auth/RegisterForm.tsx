@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import useOAuthLogin from '@/hooks/useOAuthLogin';
 import useRegister from '@/hooks/useRegister';
 import type { RegisterPayload } from '@/types/auth.types';
 
@@ -15,10 +16,18 @@ export function RegisterForm() {
     formState: { errors },
   } = useForm<RegisterPayload>();
   const { mutate, isPending, isError, error } = useRegister();
+  const {
+    mutate: oauthMutate,
+    isPending: isOAuthPending,
+    isError: isOAuthError,
+    error: oauthError,
+  } = useOAuthLogin();
 
   const onSubmit = (formData: RegisterPayload) => {
     mutate(formData);
   };
+
+  const isLoading = isPending || isOAuthPending;
 
   return (
     <div className="w-full max-w-sm rounded-lg border bg-card p-6 shadow-sm">
@@ -76,7 +85,7 @@ export function RegisterForm() {
           <Textarea id="bio" {...register('bio')} />
         </div>
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" className="w-full" disabled={isLoading}>
           {isPending ? 'Creating account...' : 'Register'}
         </Button>
 
@@ -86,6 +95,31 @@ export function RegisterForm() {
           </p>
         ) : null}
       </form>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-card px-2 text-muted-foreground">Or</span>
+        </div>
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        disabled={isLoading}
+        onClick={() => oauthMutate()}
+      >
+        {isOAuthPending ? 'Signing in...' : 'Google'}
+      </Button>
+
+      {isOAuthError ? (
+        <p className="mt-2 text-sm text-destructive">
+          {oauthError?.message ?? 'Google sign-in failed. Please try again.'}
+        </p>
+      ) : null}
 
       <p className="mt-4 text-center text-sm text-muted-foreground">
         Already have an account?{' '}
