@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { getMeApi } from '@/api/user.api';
-import { getToken } from '@/lib/token';
+import { getRefreshToken, getToken } from '@/lib/token';
 import { useAuthStore } from '@/store/auth.store';
 
 function useBootstrapAuth(): void {
@@ -20,7 +20,7 @@ function useBootstrapAuth(): void {
     async function bootstrap(currentToken: string): Promise<void> {
       try {
         const { data } = await getMeApi();
-        setAuth(data, currentToken);
+        setAuth(data, currentToken, getRefreshToken() ?? '');
       } catch {
         clearAuth();
       } finally {

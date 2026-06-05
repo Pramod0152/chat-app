@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { oauthLogin } from '@/api/oauth-login';
 import useLogin from '@/hooks/useLogin';
+import useOAuthLogin from '@/hooks/useOAuthLogin';
 import type { LoginPayload } from '@/types/auth.types';
 
 export function LoginForm() {
@@ -15,10 +15,18 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginPayload>();
   const { mutate, isPending, isError, error } = useLogin();
+  const {
+    mutate: oauthMutate,
+    isPending: isOAuthPending,
+    isError: isOAuthError,
+    error: oauthError,
+  } = useOAuthLogin();
 
   const onSubmit = (formData: LoginPayload) => {
     mutate(formData);
   };
+
+  const isLoading = isPending || isOAuthPending;
 
   return (
     <div className="w-full max-w-sm rounded-lg border bg-card p-6 shadow-sm">
@@ -57,7 +65,7 @@ export function LoginForm() {
           ) : null}
         </div>
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" className="w-full" disabled={isLoading}>
           {isPending ? 'Signing in...' : 'Sign in'}
         </Button>
 
@@ -81,10 +89,17 @@ export function LoginForm() {
         type="button"
         variant="outline"
         className="w-full"
-        onClick={() => oauthLogin()}
+        disabled={isLoading}
+        onClick={() => oauthMutate()}
       >
-        Google
+        {isOAuthPending ? 'Signing in...' : 'Google'}
       </Button>
+
+      {isOAuthError ? (
+        <p className="mt-2 text-sm text-destructive">
+          {oauthError?.message ?? 'Google sign-in failed. Please try again.'}
+        </p>
+      ) : null}
 
       <p className="mt-4 text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{' '}

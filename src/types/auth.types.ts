@@ -23,6 +23,14 @@ export interface RegisterPayload {
   location?: string;
 }
 
+export interface SsoLoginPayload {
+  sso_token: string;
+  fcm_token?: string;
+  device_id: string;
+  device_type: string;
+  version: string;
+}
+
 export interface AuthResponse {
   message: string;
   data: {

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { removeToken, setToken } from '@/lib/token';
+import { removeToken, setTokens } from '@/lib/token';
 import type { User } from '@/types/auth.types';
 
 interface AuthState {
@@ -8,7 +8,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isBootstrapping: boolean;
 
-  setAuth: (user: User, token: string) => void;
+  setAuth: (user: User, accessToken: string, refreshToken: string) => void;
   clearAuth: () => void;
   setUser: (user: User) => void;
   setBootstrapping: (value: boolean) => void;
@@ -19,8 +19,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   isBootstrapping: true,
 
-  setAuth: (user, token) => {
-    setToken(token);
+  setAuth: (user, accessToken, refreshToken) => {
+    setTokens(accessToken, refreshToken);
     set({ user, isAuthenticated: true });
   },
   clearAuth: () => {

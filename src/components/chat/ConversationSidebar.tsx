@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { ConversationItem } from '@/components/chat/ConversationItem';
 import { SkeletonConversation } from '@/components/shared/SkeletonConversation';
@@ -8,14 +7,14 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useConversations } from '@/hooks/useConversations';
+import useLogout from '@/hooks/useLogout';
 import { getConversationDisplayName } from '@/lib/conversation';
 import { useAuthStore } from '@/store/auth.store';
 import { useChatStore } from '@/store/chat.store';
 
 export function ConversationSidebar() {
-  const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.user);
-  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const logout = useLogout();
   const activeConversationId = useChatStore(
     (state) => state.activeConversationId,
   );
@@ -28,11 +27,6 @@ export function ConversationSidebar() {
   const { data, isLoading, isError } = useConversations();
 
   const currentUserId = currentUser?.id ?? -1;
-
-  const handleLogout = () => {
-    clearAuth();
-    navigate('/login');
-  };
 
   const conversations = data?.data ?? [];
   const filteredConversations = conversations.filter((conversation) =>
@@ -56,7 +50,7 @@ export function ConversationSidebar() {
           type="button"
           variant="ghost"
           size="icon"
-          onClick={handleLogout}
+          onClick={logout}
           aria-label="Log out"
         >
           <svg

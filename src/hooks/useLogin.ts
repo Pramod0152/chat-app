@@ -1,13 +1,10 @@
-import { useNavigate } from 'react-router-dom';
-
 import { useClientMutation } from '@/hooks/useClientMutation';
+import useOnAuthSuccess from '@/hooks/useOnAuthSuccess';
 import { getFcmToken } from '@/lib/firebase';
-import { useAuthStore } from '@/store/auth.store';
 import type { AuthResponse, LoginPayload } from '@/types/auth.types';
 
 function useLogin() {
-  const navigate = useNavigate();
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const onAuthSuccess = useOnAuthSuccess();
 
   return useClientMutation<AuthResponse, LoginPayload>({
     request: {
@@ -21,10 +18,7 @@ function useLogin() {
         ...(fcm_token ? { fcm_token } : {}),
       };
     },
-    onSuccess: (response) => {
-      setAuth(response.data.user, response.data.access_token);
-      navigate('/chat');
-    },
+    onSuccess: onAuthSuccess,
   });
 }
 
