@@ -1,11 +1,11 @@
-import { apiClient } from '@/api/axios.instance';
+import { clientQuery } from '@/api/clientQuery';
 import type { ApiListResponse, Message } from '@/types/chat.types';
 
-export async function getMessagesApi(
+export function getMessagesApi(
   conversation_id: number,
 ): Promise<ApiListResponse<Message>> {
-  const response = await apiClient.get<ApiListResponse<Message>>(
-    `/messages?conversation_id=${conversation_id}`,
-  );
-  return response.data;
+  return clientQuery<ApiListResponse<Message>>({
+    url: '/messages',
+    query: { conversation_id },
+  });
 }

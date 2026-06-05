@@ -1,21 +1,22 @@
-import { apiClient } from '@/api/axios.instance';
+import { clientQuery } from '@/api/clientQuery';
 import type {
   AuthResponse,
   LoginPayload,
   RegisterPayload,
 } from '@/types/auth.types';
 
-export async function loginApi(payload: LoginPayload): Promise<AuthResponse> {
-  const response = await apiClient.post<AuthResponse>('/auth/login', payload);
-  return response.data;
+export function loginApi(payload: LoginPayload): Promise<AuthResponse> {
+  return clientQuery<AuthResponse, LoginPayload>({
+    url: '/auth/login',
+    method: 'POST',
+    body: payload,
+  });
 }
 
-export async function registerApi(
-  payload: RegisterPayload,
-): Promise<AuthResponse> {
-  const response = await apiClient.post<AuthResponse>(
-    '/auth/register',
-    payload,
-  );
-  return response.data;
+export function registerApi(payload: RegisterPayload): Promise<AuthResponse> {
+  return clientQuery<AuthResponse, RegisterPayload>({
+    url: '/auth/register',
+    method: 'POST',
+    body: payload,
+  });
 }

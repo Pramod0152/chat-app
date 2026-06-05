@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { oauthLogin } from '@/api/oauth-login';
 import useLogin from '@/hooks/useLogin';
 import type { LoginPayload } from '@/types/auth.types';
 
@@ -66,6 +67,24 @@ export function LoginForm() {
           </p>
         ) : null}
       </form>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-card px-2 text-muted-foreground">Or</span>
+        </div>
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={() => oauthLogin()}
+      >
+        Google
+      </Button>
 
       <p className="mt-4 text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{' '}

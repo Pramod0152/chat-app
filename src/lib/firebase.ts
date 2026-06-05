@@ -1,20 +1,23 @@
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, isSupported } from 'firebase/messaging';
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, isSupported } from "firebase/messaging";
+import { getAuth } from "firebase/auth";
 
-import { firebaseConfig } from './firebase.config';
+import { firebaseConfig } from "./firebase.config";
 
 const app = initializeApp(firebaseConfig);
 
 export const messaging = getMessaging(app);
 
+export const auth = getAuth(app);
+
 async function registerMessagingServiceWorker(): Promise<ServiceWorkerRegistration | null> {
-  if (!('serviceWorker' in navigator)) {
+  if (!("serviceWorker" in navigator)) {
     return null;
   }
 
   const registration = await navigator.serviceWorker.register(
-    '/firebase-messaging-sw.js',
-    { scope: '/' },
+    "/firebase-messaging-sw.js",
+    { scope: "/" }
   );
   await navigator.serviceWorker.ready;
   return registration;
@@ -23,12 +26,12 @@ async function registerMessagingServiceWorker(): Promise<ServiceWorkerRegistrati
 export async function getFcmToken(): Promise<string | null> {
   try {
     const supported = await isSupported();
-    if (!supported || !('Notification' in window)) {
+    if (!supported || !("Notification" in window)) {
       return null;
     }
 
     const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
+    if (permission !== "granted") {
       return null;
     }
 
@@ -44,7 +47,7 @@ export async function getFcmToken(): Promise<string | null> {
 
     return token || null;
   } catch (error) {
-    console.error('Failed to get FCM token:', error);
+    console.error("Failed to get FCM token:", error);
     return null;
   }
 }

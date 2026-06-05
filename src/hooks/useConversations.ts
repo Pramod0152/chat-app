@@ -1,11 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-
-import { getConversationsApi } from '@/api/conversation.api';
+import { useClientQuery } from '@/hooks/useClientQuery';
+import type { ApiListResponse, Conversation } from '@/types/chat.types';
 
 export function useConversations() {
-  return useQuery({
+  return useClientQuery<ApiListResponse<Conversation>>({
     queryKey: ['conversations'],
-    queryFn: getConversationsApi,
+    request: {
+      url: '/conversations',
+    },
     staleTime: 30 * 1000,
   });
 }
