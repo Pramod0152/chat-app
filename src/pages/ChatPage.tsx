@@ -12,12 +12,12 @@ function ChatPage() {
   useEffect(() => {
     onMessage(messaging, (payload) => {
       console.log(payload);
-      toast(payload.notification.body)
-    })
+      toast(payload.notification?.body ?? '');
+    });
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-transparent">
       <ConversationSidebar />
       <Separator orientation="vertical" />
       <MessageThread />

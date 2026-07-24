@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface ChatState {
   activeConversationId: number | null;
@@ -7,6 +7,12 @@ interface ChatState {
   clearActiveConversation: () => void;
   incrementUnread: (conversationId: number) => void;
   clearUnread: (conversationId: number) => void;
+  typingUsers: Record<number, number[]>;
+  setUserTyping: (
+    conversationId: number,
+    userId: number,
+    isTyping: boolean
+  ) => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -33,4 +39,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set((state) => ({
       unreadCounts: { ...state.unreadCounts, [conversationId]: 0 },
     })),
+  typingUsers: {},
+  setUserTyping: (conversationId, userId, isTyping) =>
+    set((state) => {
+      const current = state.typingUsers[conversationId] ?? [];
+      const alreadyTyping = current.includes(userId);
+
+      if (isTyping === alreadyTyping) {
+        return state; // no-op: don't create new references for nothing
+      }
+
+      const next = isTyping
+        ? [...current, userId]
+        : current.filter((id) => id !== userId);
+
+      return { typingUsers: { ...state.typingUsers, [conversationId]: next } };
+    }),
 }));

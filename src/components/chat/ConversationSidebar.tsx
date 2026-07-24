@@ -36,13 +36,13 @@ export function ConversationSidebar() {
   );
 
   return (
-    <aside className="flex h-full w-72 shrink-0 flex-col">
-      <div className="flex items-center justify-between gap-2 p-3">
+    <aside className="flex h-full w-72 shrink-0 flex-col border-r bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="flex items-center justify-between gap-2 px-4 py-4">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="bg-muted text-muted-foreground flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-medium">
+          <div className="bg-gradient-to-br from-sky-500 to-cyan-400 text-white shadow-sm flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
             {currentUser?.username.charAt(0).toUpperCase() || '?'}
           </div>
-          <span className="truncate font-semibold">
+          <span className="truncate text-[15px] font-bold tracking-tight">
             {currentUser?.username ?? 'Unknown'}
           </span>
         </div>
@@ -72,7 +72,7 @@ export function ConversationSidebar() {
 
       <Separator />
 
-      <div className="p-3">
+      <div className="px-4 py-3">
         <Input
           type="text"
           placeholder="Search conversations"
@@ -81,7 +81,7 @@ export function ConversationSidebar() {
         />
       </div>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 px-2 pb-3">
         {isLoading ? (
           <div>
             {Array.from({ length: 5 }).map((_, index) => (
@@ -89,7 +89,7 @@ export function ConversationSidebar() {
             ))}
           </div>
         ) : isError ? (
-          <p className="text-muted-foreground p-3 text-sm">
+          <p className="text-muted-foreground px-3 py-4 text-sm">
             Failed to load conversations
           </p>
         ) : (

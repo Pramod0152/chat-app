@@ -29,26 +29,26 @@ export function ConversationItem({
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full cursor-pointer items-center gap-3 p-3 text-left transition-colors hover:bg-accent/50',
-        isActive && 'bg-accent',
+        'flex w-full cursor-pointer items-center gap-3 rounded-2xl px-3 py-3 text-left transition-all duration-200 hover:bg-sky-50/80',
+        isActive && 'bg-sky-100/90 shadow-sm ring-1 ring-sky-200',
       )}
     >
-      <div className="bg-muted text-muted-foreground flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-medium">
+      <div className="bg-gradient-to-br from-slate-200 to-slate-100 text-slate-700 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-semibold shadow-inner">
         {initial}
       </div>
       <div className="flex min-w-0 flex-1 flex-col">
-        <span className="truncate font-semibold">{displayName}</span>
-        <span className="text-muted-foreground truncate text-xs">
+        <span className="truncate text-[15px] font-bold tracking-tight">{displayName}</span>
+        <span className="text-muted-foreground truncate text-xs font-medium">
           {secondaryText}
         </span>
         {conversation.last_message?.content ? (
-          <span className="text-muted-foreground truncate text-sm">
+          <span className="text-muted-foreground truncate text-sm leading-5">
             {conversation.last_message.content}
           </span>
         ) : null}
       </div>
       {showBadge ? (
-        <span className="bg-primary text-primary-foreground flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-medium">
+        <span className="bg-sky-500 text-white flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold shadow-sm">
           {unreadCount > 99 ? '99+' : unreadCount}
         </span>
       ) : null}
