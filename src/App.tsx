@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { ProtectedRoute } from '@/components/shared/ProtectedRoute';
 import useBootstrapAuth from '@/hooks/useBootstrapAuth';
-import ChatPage from '@/pages/ChatPage';
+import { ChatPage } from '@/pages/ChatPage';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 

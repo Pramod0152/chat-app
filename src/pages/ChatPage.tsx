@@ -2,28 +2,19 @@ import { ConversationSidebar } from '@/components/chat/ConversationSidebar';
 import { MessageThread } from '@/components/chat/MessageThread';
 import { Separator } from '@/components/ui/separator';
 import { useChatSocket } from '@/hooks/useChatSocket';
-import { messaging } from '@/lib/firebase';
-import { onMessage } from 'firebase/messaging';
-import { useEffect } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+import { useChatStore } from '@/store/chat.store';
 
-function ChatPage() {
+export function ChatPage() {
   useChatSocket();
-  useEffect(() => {
-    onMessage(messaging, (payload) => {
-      console.log(payload);
-      toast(payload.notification?.body ?? '');
-    });
-  }, []);
+  const activeConversationId = useChatStore((state) => state.activeConversationId);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-transparent">
+    <div className="flex h-screen overflow-hidden">
       <ConversationSidebar />
       <Separator orientation="vertical" />
-      <MessageThread />
+      <MessageThread conversationId={activeConversationId} />
       <Toaster />
     </div>
   );
 }
-
-export default ChatPage;
