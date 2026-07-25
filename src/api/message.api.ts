@@ -9,3 +9,12 @@ export function getMessagesApi(
     query: { conversation_id },
   });
 }
+
+export function getAiSummaryApi(
+  conversation_id: number,
+): Promise<{ summary: string }> {
+  return clientQuery<{ summary: string }>({
+    url: '/summary',
+    query: { conversation_id },
+  });
+}

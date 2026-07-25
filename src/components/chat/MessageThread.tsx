@@ -1,27 +1,45 @@
-'use client'
-
 import { useMessages } from '@/hooks/useMessages'
 import { useConversations } from '@/hooks/useConversations'
+import { getAiSummaryApi } from '@/api/message.api'
 import { useAuthStore } from '@/store/auth.store'
 import { useChatStore } from '@/store/chat.store'
 import { MessageBubble } from './MessageBubble'
 import { ComposeBox } from './ComposeBox'
-import { useEffect, useRef } from 'react'
+import { Button } from '@/components/ui/button'
+import { useEffect, useRef, useState } from 'react'
+import { Sparkles } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface MessageThreadProps {
   conversationId?: number | null
 }
 
 export function MessageThread({ conversationId = null }: MessageThreadProps) {
-  const { data, isLoading, isError } = useMessages(conversationId)
+  const { data, isLoading, isError, refetch: refetchMessages } = useMessages(conversationId)
   const { data: conversationsData } = useConversations()
   const currentUser = useAuthStore((state) => state.user)
   const currentUserId = currentUser?.id ?? -1
   const typingUsersMap = useChatStore((state) => state.typingUsers)
+  const [isGenerating, setIsGenerating] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const conversation = conversationsData?.data.find((c) => c.id === conversationId)
+
+  const handleGenerateSummary = async () => {
+    if (!conversationId) return
+    setIsGenerating(true)
+    try {
+      await getAiSummaryApi(conversationId)
+      toast.success('Summary generated successfully')
+      // Refetch messages to show the new summary message
+      refetchMessages()
+    } catch (error) {
+      toast.error('Failed to generate summary')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   const messages = data?.data ? [...data.data].reverse() : []
   const typingUserIds = conversationId !== null ? (typingUsersMap[conversationId] ?? []) : []
@@ -57,6 +75,17 @@ export function MessageThread({ conversationId = null }: MessageThreadProps) {
               {conversation?.type === 'Group' ? `${conversation?.participants?.length ?? 0} members` : 'Private'}
             </div>
           </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleGenerateSummary}
+            disabled={isGenerating}
+            className="gap-2"
+          >
+            <Sparkles className="h-4 w-4" />
+            {isGenerating ? 'Generating...' : 'AI Summary'}
+          </Button>
         </div>
       </div>
 
