@@ -1,8 +1,17 @@
 import { useState } from 'react';
+import { Plus } from 'lucide-react';
 
 import { ConversationItem } from '@/components/chat/ConversationItem';
+import { NewChatDialog } from '@/components/chat/NewChatDialog';
+import { NewGroupDialog } from '@/components/chat/NewGroupDialog';
 import { SkeletonConversation } from '@/components/shared/SkeletonConversation';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -46,28 +55,41 @@ export function ConversationSidebar() {
             {currentUser?.username ?? 'Unknown'}
           </span>
         </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={logout}
-          aria-label="Log out"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="size-4"
+        <div className="flex items-center gap-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button type="button" variant="ghost" size="icon" aria-label="New chat or group">
+                <Plus className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <NewChatDialog trigger={<DropdownMenuItem onSelect={(e) => e.preventDefault()}>New Chat</DropdownMenuItem>} />
+              <NewGroupDialog trigger={<DropdownMenuItem onSelect={(e) => e.preventDefault()}>New Group</DropdownMenuItem>} />
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={logout}
+            aria-label="Log out"
           >
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" x2="9" y1="12" y2="12" />
-          </svg>
-        </Button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="size-4"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" x2="9" y1="12" y2="12" />
+            </svg>
+          </Button>
+        </div>
       </div>
 
       <Separator />

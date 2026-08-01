@@ -5,6 +5,7 @@ export interface Participant {
   conversation_id: number;
   user_id: number;
   last_read_message_id?: number;
+  is_admin: boolean;
   created_at: string;
   updated_at: string;
   user?: User;

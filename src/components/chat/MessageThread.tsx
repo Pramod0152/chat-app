@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { useEffect, useRef, useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 interface MessageThreadProps {
   conversationId?: number | null
@@ -21,10 +22,17 @@ export function MessageThread({ conversationId = null }: MessageThreadProps) {
   const currentUserId = currentUser?.id ?? -1
   const typingUsersMap = useChatStore((state) => state.typingUsers)
   const [isGenerating, setIsGenerating] = useState(false)
+  const navigate = useNavigate()
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const conversation = conversationsData?.data.find((c) => c.id === conversationId)
+
+  const handleGroupClick = () => {
+    if (conversation?.type === 'Group' && conversationId) {
+      navigate(`/group/${conversationId}`)
+    }
+  }
 
   const handleGenerateSummary = async () => {
     if (!conversationId) return
@@ -68,9 +76,17 @@ export function MessageThread({ conversationId = null }: MessageThreadProps) {
             {conversation?.group_name?.charAt(0).toUpperCase() ?? '?'}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="truncate text-[17px] font-bold tracking-tight text-slate-900">
+            <button
+              onClick={handleGroupClick}
+              className={`truncate text-[17px] font-bold tracking-tight text-left ${
+                conversation?.type === 'Group'
+                  ? 'text-slate-900 hover:text-sky-600 transition-colors cursor-pointer'
+                  : 'text-slate-900 cursor-default'
+              }`}
+              disabled={conversation?.type !== 'Group'}
+            >
               {conversation?.group_name ?? 'Direct Message'}
-            </div>
+            </button>
             <div className="text-muted-foreground text-sm font-medium">
               {conversation?.type === 'Group' ? `${conversation?.participants?.length ?? 0} members` : 'Private'}
             </div>

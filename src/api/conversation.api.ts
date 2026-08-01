@@ -19,3 +19,18 @@ export function getConversationByIdApi(
     params: { id },
   });
 }
+
+export function createConversationApi(
+  data: {
+    type: 'Private' | 'Group';
+    participant_ids?: number[];
+    group_name?: string;
+    group_image?: string;
+  },
+): Promise<ApiSingleResponse<Conversation>> {
+  return clientQuery<ApiSingleResponse<Conversation>>({
+    url: '/conversations',
+    method: 'POST',
+    body: data,
+  });
+}

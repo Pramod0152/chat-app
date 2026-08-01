@@ -13,3 +13,22 @@ export function getUsersApi(): Promise<ApiListResponse<User>> {
     url: '/users',
   });
 }
+
+export function getUsersNotInPrivateConversationApi(
+  params?: { limit?: number; cursor?: number },
+): Promise<ApiListResponse<User>> {
+  return clientQuery<ApiListResponse<User>>({
+    url: '/users/not-connected-private',
+    params,
+  });
+}
+
+export function getUsersNotInGroupConversationApi(
+  conversationId: number,
+  params?: { limit?: number; cursor?: number },
+): Promise<ApiListResponse<User>> {
+  return clientQuery<ApiListResponse<User>>({
+    url: '/users/not-connected-group/:conversationId',
+    params: { conversationId, ...params },
+  });
+}

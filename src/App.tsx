@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/shared/ProtectedRoute';
 import useBootstrapAuth from '@/hooks/useBootstrapAuth';
 import { ChatPage } from '@/pages/ChatPage';
+import { GroupDetailPage } from '@/pages/GroupDetailPage';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 
@@ -18,6 +19,7 @@ function AppRoutes() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/" element={<ProtectedRoute />}>
         <Route path="chat" element={<ChatPage />} />
+        <Route path="group/:conversationId" element={<GroupDetailPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/chat" replace />} />
     </Routes>
